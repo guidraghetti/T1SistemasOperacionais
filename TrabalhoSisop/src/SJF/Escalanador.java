@@ -22,11 +22,11 @@ public class Escalanador {
 	public static void main(String[] args) throws IOException {
 		int fatiaDeTempo;
 		int numProcessos;
-		int timer = 0;
+		int quantum = 0;
 		int tempoEntradaSaida = 3;
 		int trocaContexto = 1;
 
-		FileReader lerArquivo = new FileReader("t2a.txt");
+		FileReader lerArquivo = new FileReader("t1.txt");
 		BufferedReader s = new BufferedReader(lerArquivo);
 
 		ArrayList<Processo> lstProcesso = new ArrayList<Processo>();
@@ -48,7 +48,7 @@ public class Escalanador {
 					p1.instanteDeChegada = Integer.parseInt(strs[i]);
 				} else if (i == 1) {
 					p1.unidadesDeTempoRestante = Integer.parseInt(strs[i]);
-					timer = timer + p1.unidadesDeTempoRestante;
+					quantum = quantum + p1.unidadesDeTempoRestante;
 				} else {
 					p1.listEntradaESaida.add(Integer.parseInt(strs[i]));
 				}
@@ -60,7 +60,7 @@ public class Escalanador {
 		s.close();
 		System.out.print("- C");
 		
-		while (timer != 0) {
+		while (quantum != 0) {
 
 			// ordena a lista por instante de chegada, incluindo entrada e saída
 			lstProcesso = compare(lstProcesso);
@@ -82,9 +82,9 @@ public class Escalanador {
 					}
 					// diminui a fatia de tempo do processo
 					lstProcesso.get(0).fatiaDeTempo -= lstProcesso.get(0).listEntradaESaida.get(0);
-					// timer controla o tempo de execução, quando o timer zerar é porque todos os
+					// quantum controla o tempo de execução, quando o quantum zerar é porque todos os
 					// processsos já executaram;
-					timer = timer - lstProcesso.get(0).listEntradaESaida.get(0);
+					quantum = quantum - lstProcesso.get(0).listEntradaESaida.get(0);
 					// diminui as unidades de tempo restante;
 					lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).listEntradaESaida.get(0);
 					System.out.print(" C");
@@ -102,7 +102,7 @@ public class Escalanador {
 					for (int j = 0; j < lstProcesso.get(0).unidadesDeTempoRestante; j++) {
 						System.out.print(" " + lstProcesso.get(0).nome);
 					}
-					timer = timer - lstProcesso.get(0).unidadesDeTempoRestante;
+					quantum = quantum - lstProcesso.get(0).unidadesDeTempoRestante;
 					System.out.print(" C");
 
 					lstProcesso.remove(0);
@@ -129,7 +129,7 @@ public class Escalanador {
 							lstProcesso.get(0).listEntradaESaida.set(0, ES);
 						}
 						lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).fatiaDeTempo;
-						timer = timer - lstProcesso.get(0).fatiaDeTempo;
+						quantum = quantum - lstProcesso.get(0).fatiaDeTempo;
 						System.out.print(" C");
 						lstProcesso.get(0).instanteDeChegada = trocaContexto + tempoEntradaSaida
 								+ lstProcesso.get(0).listEntradaESaida.get(0) + lstProcesso.get(0).instanteDeChegada;
@@ -139,7 +139,7 @@ public class Escalanador {
 						for (int j = 0; j < lstProcesso.get(0).listEntradaESaida.get(0); j++) {
 							System.out.print(" " + lstProcesso.get(0).nome);
 						}
-						timer = timer - lstProcesso.get(0).listEntradaESaida.get(0);
+						quantum = quantum - lstProcesso.get(0).listEntradaESaida.get(0);
 						lstProcesso.get(0).fatiaDeTempo = lstProcesso.get(0).fatiaDeTempo
 								- lstProcesso.get(0).listEntradaESaida.get(0);
 						lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).listEntradaESaida.get(0);
@@ -159,7 +159,7 @@ public class Escalanador {
 					for (int j = 0; j < lstProcesso.get(0).fatiaDeTempo; j++) {
 						System.out.print(" " + lstProcesso.get(0).nome);
 					}
-					timer = timer - lstProcesso.get(0).fatiaDeTempo;
+					quantum = quantum - lstProcesso.get(0).fatiaDeTempo;
 					lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).fatiaDeTempo;
 					lstProcesso.get(0).instanteDeChegada += lstProcesso.get(0).fatiaDeTempo + trocaContexto;
 					lstProcesso.get(0).fatiaDeTempo -= lstProcesso.get(0).fatiaDeTempo;
