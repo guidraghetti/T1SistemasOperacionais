@@ -22,7 +22,7 @@ public class Escalanador {
 	public static void main(String[] args) throws IOException {
 		int fatiaDeTempo;
 		int numProcessos;
-		int quantum = 0;
+		int contadorDeUnidadeDeTempoRestante = 0;
 		int tempoEntradaSaida = 3;
 		int trocaContexto = 1;
 
@@ -48,7 +48,7 @@ public class Escalanador {
 					p1.instanteDeChegada = Integer.parseInt(strs[i]);
 				} else if (i == 1) {
 					p1.unidadesDeTempoRestante = Integer.parseInt(strs[i]);
-					quantum = quantum + p1.unidadesDeTempoRestante;
+					contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante + p1.unidadesDeTempoRestante;
 				} else {
 					p1.listEntradaESaida.add(Integer.parseInt(strs[i]));
 				}
@@ -60,7 +60,7 @@ public class Escalanador {
 		s.close();
 		System.out.print("- C");
 		
-		while (quantum != 0) {
+		while (contadorDeUnidadeDeTempoRestante != 0) {
 
 			// ordena a lista por instante de chegada, incluindo entrada e saída
 			lstProcesso = compare(lstProcesso);
@@ -82,9 +82,9 @@ public class Escalanador {
 					}
 					// diminui a fatia de tempo do processo
 					lstProcesso.get(0).fatiaDeTempo -= lstProcesso.get(0).listEntradaESaida.get(0);
-					// quantum controla o tempo de execução, quando o quantum zerar é porque todos os
+					// contadorDeUnidadeDeTempoRestante controla o tempo de execução, quando o contadorDeUnidadeDeTempoRestante zerar é porque todos os
 					// processsos já executaram;
-					quantum = quantum - lstProcesso.get(0).listEntradaESaida.get(0);
+					contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante - lstProcesso.get(0).listEntradaESaida.get(0);
 					// diminui as unidades de tempo restante;
 					lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).listEntradaESaida.get(0);
 					System.out.print(" C");
@@ -93,7 +93,7 @@ public class Escalanador {
 						System.out.print(" C");
 					}
 
-					lstProcesso.get(0).instanteDeChegada = trocaContexto + tempoEntradaSaida
+					lstProcesso.get(0).instanteDeChegada = trocaContexto +  	
 							+ lstProcesso.get(0).listEntradaESaida.get(0) + lstProcesso.get(0).instanteDeChegada;
 					// remover a primeira entrada e saída após ser utilizada
 					lstProcesso.get(0).listEntradaESaida.remove(0);
@@ -102,7 +102,7 @@ public class Escalanador {
 					for (int j = 0; j < lstProcesso.get(0).unidadesDeTempoRestante; j++) {
 						System.out.print(" " + lstProcesso.get(0).nome);
 					}
-					quantum = quantum - lstProcesso.get(0).unidadesDeTempoRestante;
+					contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante - lstProcesso.get(0).unidadesDeTempoRestante;
 					System.out.print(" C");
 
 					lstProcesso.remove(0);
@@ -129,7 +129,7 @@ public class Escalanador {
 							lstProcesso.get(0).listEntradaESaida.set(0, ES);
 						}
 						lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).fatiaDeTempo;
-						quantum = quantum - lstProcesso.get(0).fatiaDeTempo;
+						contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante - lstProcesso.get(0).fatiaDeTempo;
 						System.out.print(" C");
 						lstProcesso.get(0).instanteDeChegada = trocaContexto + tempoEntradaSaida
 								+ lstProcesso.get(0).listEntradaESaida.get(0) + lstProcesso.get(0).instanteDeChegada;
@@ -139,7 +139,7 @@ public class Escalanador {
 						for (int j = 0; j < lstProcesso.get(0).listEntradaESaida.get(0); j++) {
 							System.out.print(" " + lstProcesso.get(0).nome);
 						}
-						quantum = quantum - lstProcesso.get(0).listEntradaESaida.get(0);
+						contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante - lstProcesso.get(0).listEntradaESaida.get(0);
 						lstProcesso.get(0).fatiaDeTempo = lstProcesso.get(0).fatiaDeTempo
 								- lstProcesso.get(0).listEntradaESaida.get(0);
 						lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).listEntradaESaida.get(0);
@@ -159,7 +159,7 @@ public class Escalanador {
 					for (int j = 0; j < lstProcesso.get(0).fatiaDeTempo; j++) {
 						System.out.print(" " + lstProcesso.get(0).nome);
 					}
-					quantum = quantum - lstProcesso.get(0).fatiaDeTempo;
+					contadorDeUnidadeDeTempoRestante = contadorDeUnidadeDeTempoRestante - lstProcesso.get(0).fatiaDeTempo;
 					lstProcesso.get(0).unidadesDeTempoRestante -= lstProcesso.get(0).fatiaDeTempo;
 					lstProcesso.get(0).instanteDeChegada += lstProcesso.get(0).fatiaDeTempo + trocaContexto;
 					lstProcesso.get(0).fatiaDeTempo -= lstProcesso.get(0).fatiaDeTempo;
